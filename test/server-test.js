@@ -551,6 +551,7 @@ describe('SOAP Server', function () {
 
       assert.deepEqual(description.StockQuoteService.StockQuotePort.GetLastTradePrice.input.$attributes, {
         AttributeInOne: "s:boolean",
+        AttributeInThree: "string",
         AttributeInTwo: "s:boolean"
       });
       assert.deepEqual(description.StockQuoteService.StockQuotePort.GetLastTradePrice.output.$attributes, {

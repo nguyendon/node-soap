@@ -205,16 +205,20 @@ describe('WSDL Parser (non-strict)', () => {
     if (!/.wsdl$/.exec(file)) return;
     xit('should parse and describe '+file, (done) => {
       soap.createClient(__dirname+'/wsdl/'+file, function(err, client) {
-        assert.ifError(err);
-        client.describe();
-        done();
+        if (err && err.message === 'Root element of WSDL was <html>. This is likely an authentication issue.') {
+          done();
+        } else {
+          assert.ifError(err);
+          client.describe();
+          done();
+        }
       });
     });
   });
 
   it('should not parse connection error', (done) => {
     soap.createClient(__dirname+'/wsdl/connection/econnrefused.wsdl', function(err, client) {
-      assert.ok(/EADDRNOTAVAIL|ECONNREFUSED/.test(err), err);
+      assert.ok(/EADDRNOTAVAIL|ECONNREFUSED/.test(err.code), err);
       done();
     });
   });

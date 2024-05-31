@@ -50,6 +50,8 @@ This module lets you connect to web services using SOAP.  It also provides a ser
   - [ClientSSLSecurityPFX](#clientsslsecuritypfx)
   - [WSSecurity](#wssecurity)
   - [WSSecurityCert](#wssecuritycert)
+  - [WSSecurityPlusCert](#wssecuritypluscert)
+  - [WSSecurityCertWithToken](#wssecuritycertwithtoken)
   - [NTLMSecurity](#ntlmsecurity)
 - [Handling XML Attributes, Value and XML (wsdlOptions).](#handling-xml-attributes-value-and-xml-wsdloptions)
   - [Overriding the `value` key](#overriding-the-value-key)
@@ -623,7 +625,17 @@ You must specify all of the namespaces and namespace prefixes yourself.  The ele
 ``` javascript
   client.MyService.MyPort.MyFunction({name: 'value'}, function(err, result) {
       // client.lastElapsedTime - the elapsed time of the last request in milliseconds
-  }, {proxy: 'http://localhost:8888'})
+  }, {
+      proxy: {
+          protocol: 'https',
+          host: '127.0.0.1',
+          port: 9000,
+          auth: {
+              username: 'mikeymike',
+              password: 'rapunz3l'
+          }
+      }
+  })
 ```
 
 - You can modify xml (string) before call:
@@ -915,6 +927,7 @@ WS-Security X509 Certificate support.
         existingPrefixes: {
             wsse: 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd',
         }
+     }
   }
   var wsSecurity = new soap.WSSecurityCert(privateKey, publicKey, password, options);
   client.setSecurity(wsSecurity);
@@ -1069,6 +1082,16 @@ Use WSSecurity and WSSecurityCert together.
         </Signature>
     </wsse:Security>
 </soap:Header>
+```
+### WSSecurityCertWithToken
+
+WS-Security X509 Certificate support. Just like WSSecurityCert, except that it accepts the input properties as a single object, with two properties added `username` and `password`. Which if added, will add a UsernameToken Element to the xml security element.
+
+``` xml
+<wsse:UsernameToken>
+  <wsse:Username>someusername</wsse:Username>
+  <wsse:Password>someusername's password</wsse:Password>
+</wsse:UsernameToken>
 ```
 
 ### NTLMSecurity
